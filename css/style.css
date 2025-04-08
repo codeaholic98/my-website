@@ -1,7 +1,7 @@
 :root {
     /* Light theme variables */
-    --primary-color: #2563eb;
-    --secondary-color: #1e40af;
+    --primary-color: #427aa1;
+    --secondary-color: #2c5a7a;
     --text-color: #1f2937;
     --text-light: #6b7280;
     --background-color: #ffffff;
@@ -13,8 +13,8 @@
 }
 
 [data-theme="dark"] {
-    --primary-color: #3b82f6;
-    --secondary-color: #60a5fa;
+    --primary-color: #427aa1;
+    --secondary-color: #2c5a7a;
     --text-color: #f3f4f6;
     --text-light: #9ca3af;
     --background-color: #111827;
@@ -96,18 +96,18 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    font-size: 1.4rem;
-    font-weight: 800;
+    font-size: 1.3rem;
+    font-weight: 900;
     color: var(--text-color);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    transition: color var(--transition-speed);
+    letter-spacing: 2px;
+    transition: all var(--transition-speed);
     padding: 0.5rem 1rem;
-    border: 2px solid transparent;
-    background-color: var(--background-alt);
+    border: none;
+    background: none;
     border-radius: 0.5rem;
     animation: logoSlideIn 0.8s ease-out forwards;
     opacity: 0;
+    text-shadow: 2px 2px 4px var(--shadow-color);
 }
 
 @keyframes logoSlideIn {
@@ -131,7 +131,7 @@ body {
     object-fit: contain;
     padding: 0;
     background: none;
-    border-radius: 0;
+    border-radius: 7px;
     transition: transform var(--transition-speed);
 }
 
@@ -139,12 +139,32 @@ body {
     display: flex;
     align-items: center;
     height: 35px;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.logo-text span::first-letter {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-right: 0.15rem;
+    line-height: 1;
+}
+
+.logo-text span::after {
+    content: attr(data-text);
+    text-transform: capitalize;
+    font-size: 1rem;
+    font-weight: 800;
 }
 
 .logo a:hover .logo-text {
     color: var(--primary-color);
     transform: scale(1.1);
+    text-shadow: 3px 3px 6px var(--shadow-color);
+    letter-spacing: 3px;
 }
 
 .logo i {
@@ -400,23 +420,73 @@ body {
     background-color: var(--card-background);
     padding: 2rem;
     border-radius: 1rem;
-    box-shadow: 0 4px 20px var(--shadow-color);
-    transition: transform var(--transition-speed);
+    box-shadow: 0 4px 15px var(--shadow-color);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
 }
 
 .service-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px) scale(1.08);
+    box-shadow: 0 12px 40px var(--shadow-color);
+}
+
+.service-card:hover::before {
+    transform: translateX(100%);
 }
 
 .service-card i {
     font-size: 2.5rem;
     color: var(--primary-color);
     margin-bottom: 1.5rem;
+    transition: transform 0.5s ease;
+}
+
+.service-card:hover i {
+    transform: scale(1.2) rotate(5deg);
 }
 
 .service-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
+}
+
+.slider-dots {
+    display: none;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    touch-action: none;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    touch-action: none;
+    opacity: 0.5;
+}
+
+.dot.active {
+    background-color: var(--primary-color);
+    opacity: 1;
+    transform: scale(1.2);
 }
 
 /* Contact Section */
@@ -568,6 +638,78 @@ body {
     .stats {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .logo-text {
+        font-size: 1.2rem;
+        letter-spacing: 1.8px;
+    }
+    
+    .logo-text span {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .services-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        gap: 0;
+        padding: 0;
+        touch-action: pan-x pinch-zoom;
+        cursor: grab;
+    }
+
+    .services-grid:active {
+        cursor: grabbing;
+    }
+
+    .services-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .service-card {
+        flex: 0 0 100%;
+        scroll-snap-align: start;
+        padding: 1.5rem;
+        animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        touch-action: pan-x;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .service-card:active {
+        transform: scale(1.04);
+        box-shadow: 0 8px 25px var(--shadow-color);
+    }
+
+    .service-card.active {
+        transform: scale(1.08);
+        box-shadow: 0 15px 45px var(--shadow-color);
+        border: 2px solid var(--primary-color);
+    }
+
+    .service-card.active i {
+        transform: scale(1.2) rotate(5deg);
+        color: var(--primary-color);
+    }
+
+    .slider-dots {
+        display: flex;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 }
 
 @media (max-width: 768px) {
@@ -604,16 +746,16 @@ body {
 
     .logo-text {
         font-size: 1.1rem;
-        padding: 0.25rem 0.75rem;
+        letter-spacing: 1.5px;
+    }
+    
+    .logo-text span {
+        font-size: 0.85rem;
+        text-transform: uppercase;
     }
     
     .logo-text img {
         height: 30px;
-    }
-    
-    .logo-text span {
-        height: 30px;
-        font-size: 1rem;
     }
 
     .nav-links {
@@ -662,18 +804,6 @@ body {
         gap: 1.5rem;
     }
 
-    .service-card {
-        padding: 1.5rem;
-    }
-
-    .service-card i {
-        font-size: 2rem;
-    }
-
-    .service-card h3 {
-        font-size: 1.3rem;
-    }
-
     .contact-info {
         gap: 1.5rem;
     }
@@ -718,6 +848,16 @@ body {
         padding: 1.25rem;
     }
 
+    .service-card:active {
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px var(--shadow-color);
+    }
+
+    .service-card.active {
+        transform: scale(1.1);
+        box-shadow: 0 18px 50px var(--shadow-color);
+    }
+
     .service-card i {
         font-size: 1.75rem;
     }
@@ -741,6 +881,30 @@ body {
     .footer-section p,
     .footer-section a {
         font-size: 0.9rem;
+    }
+
+    .logo-text {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+    
+    .logo-text span {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+    
+    .logo-text img {
+        height: 25px;
+    }
+
+    .slider-dots {
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
     }
 }
 
@@ -776,7 +940,12 @@ img {
 }
 
 [data-theme="dark"] img {
-    background-color: var(--secondary-color);
+    background-color: var(--background-color);
+}
+
+[data-theme="dark"] .hero-image img,
+[data-theme="dark"] .about-image img {
+    background-color: #ffffff;
 }
 
 [data-theme="dark"] .logo-text {

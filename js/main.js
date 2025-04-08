@@ -136,4 +136,89 @@ function typeText() {
 // Start the typing animation when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     typeText();
-}); 
+});
+
+// Services Slider
+const servicesGrid = document.querySelector('.services-grid');
+const dots = document.querySelectorAll('.dot');
+let currentSlide = 0;
+let isDragging = false;
+let startX;
+let scrollLeft;
+let touchStartX = 0;
+let touchEndX = 0;
+
+function updateSlider() {
+    // Update dots
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+
+    // Scroll to current slide
+    const slideWidth = servicesGrid.offsetWidth;
+    servicesGrid.scrollTo({
+        left: slideWidth * currentSlide,
+        behavior: 'smooth'
+    });
+}
+
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % dots.length;
+    updateSlider();
+}
+
+function prevSlide() {
+    currentSlide = (currentSlide - 1 + dots.length) % dots.length;
+    updateSlider();
+}
+
+// Touch event handlers
+servicesGrid.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    startX = e.touches[0].pageX - servicesGrid.offsetLeft;
+    scrollLeft = servicesGrid.scrollLeft;
+    touchStartX = e.touches[0].clientX;
+});
+
+servicesGrid.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.touches[0].pageX - servicesGrid.offsetLeft;
+    const walk = (x - startX) * 1.5; // Reduced multiplier for smoother dragging
+    servicesGrid.scrollLeft = scrollLeft - walk;
+});
+
+servicesGrid.addEventListener('touchend', (e) => {
+    isDragging = false;
+    const slideWidth = servicesGrid.offsetWidth;
+    const newSlide = Math.round(servicesGrid.scrollLeft / slideWidth);
+    
+    if (newSlide !== currentSlide) {
+        currentSlide = newSlide;
+        updateSlider();
+    }
+
+    touchEndX = e.changedTouches[0].clientX;
+    handleSwipe();
+});
+
+// Handle dot clicks
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        currentSlide = index;
+        updateSlider();
+    });
+});
+
+function handleSwipe() {
+    const swipeThreshold = 30; // Reduced threshold for easier swipes
+    const swipeDistance = touchEndX - touchStartX;
+
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+        if (swipeDistance > 0) {
+            prevSlide();
+        } else {
+            nextSlide();
+        }
+    }
+} 
